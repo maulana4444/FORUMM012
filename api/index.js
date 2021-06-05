@@ -39,41 +39,43 @@ bot.on('message', (msg) => {
         r = parseFloat(s[1])
         model.predict(
             [
-                i, //string to float
-                r
+                parseFLoat(s[0]), //string to float
+                parseFLoat(s[1])
             ]
         ).then((jres1)=>{
             console.log(jres1);
             //v = parseFloat(jres1[0])
             //p = parseFloat(jres1[1])
             
-            cls_model.classify([i, r, parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
+            cls_model.classify([parseFLoat(s[0]), parseFLoat(s[1]), parseFloat(jres1[0]), parseFloat(jres1[1])]).then((jres2)=>{
                 bot.sendMessage(
                     msg.chat.id,
                     `nilai v yang diprediksi adalah ${jres1[0]} volt`
                 );
                 bot.sendMessage(
                     msg.chat.id,
-                    `nilai p yang diprediksi adalah ${jres1[1]} volt`
+                    `nilai p yang diprediksi adalah ${jres1[1]} watt`
                 );
                 bot.sendMessage(
                     msg.chat.id,
                     `Klasifikasi Tegangan ${jres2}`
                 );
+                state = 0;
             })
         })
     }else{
-        state = 0;
-        //bot.sendMessage(
-            //msg.chat.id,
-            //`Please click /start`
-        //);
+        
+        bot.sendMessage(
+            msg.chat.id,
+            `Please click /start`
+        );
+        state = 0
     }
 })
                     
 
 // routers
-r.get('/prediction/:i/:r', function(req, res, next) {    
+r.get('/predict/:i/:r', function(req, res, next) {    
     model.predict(
         [
             parseFloat(req.params.i), // string to float
